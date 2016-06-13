@@ -20,8 +20,11 @@
         </activity>
         <service
             android:name="com.uto.servicelink.ServicerSample"
+            android:enabled="true"
             android:process=":remote">
             <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="com.uto.servicelink.MyAidlInterface" />
             </intent-filter>
         </service>

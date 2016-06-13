@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.Process;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -25,7 +26,7 @@ import java.util.TimerTask;
  */
 public class ServicerSample extends Service {
 
-    private MyAidlInterface.Stub myBinder = new MyAidlInterface.Stub() {
+    MyAidlInterface.Stub myBinder = new MyAidlInterface.Stub() {
 
         @Override
         public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, String aString) throws RemoteException {
@@ -34,15 +35,19 @@ public class ServicerSample extends Service {
 
         @Override
         public void startDownload() throws RemoteException {
-            Log.e(getClass().getSimpleName(), " startDownload stub");
+            Log.e(getClass().getSimpleName(), " startDownload throws RemoteException");
+            clickDownload();
         }
     };
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e(getClass().getSimpleName(), "onCreate");
-        Log.e(getClass().getSimpleName(), "currentThread: " + Thread.currentThread().getId());
+        Log.e(getClass().getSimpleName(), "process id is " + Process.myPid());
+        clickDownload();
+    }
+
+    private void clickDownload() {
         Notification.Builder notification = new Notification.Builder(getApplicationContext());
         notification.setSmallIcon(R.mipmap.add_icon).setContentTitle("有通知到来").setWhen(System.currentTimeMillis()).setContentText("这是通知的内容");
         Intent notificationIntent = new Intent(this, MainActivity.class);
@@ -50,10 +55,15 @@ public class ServicerSample extends Service {
                 notificationIntent, 0);
         notification.setContentIntent(pendingIntent);
         startForeground(1, notification.build());
+        preformDownLoad();
+    }
+
+    private void preformDownLoad() {
+        num++;
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                getHaveNewMessage();
+                Log.e(getClass().getSimpleName(), " startDownload stub" + " num " + num);
             }
         }, 0, 3000);
     }
@@ -86,7 +96,6 @@ public class ServicerSample extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e(getClass().getSimpleName(), "onStartCommand" + " intent " + intent.toString() + " flags " + flags + " startId " + startId);
         return super.onStartCommand(intent, flags, startId);
     }
 

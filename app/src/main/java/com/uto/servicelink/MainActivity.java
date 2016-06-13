@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Process;
 import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Log.e(getClass().getSimpleName(), "currentThread: " + Thread.currentThread().getId());
+        Log.e(getClass().getSimpleName(), "process id is " + Process.myPid());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.btn_start:
                 Intent intent = new Intent(this, ServicerSample.class);
-                Log.e(getClass().getSimpleName(), " intent " + intent.toString());
                 startService(intent);
                 break;
             case R.id.btn_end:
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn_bind:
                 Intent bindIntent = new Intent("com.uto.servicelink.MyAidlInterface");
+                bindIntent.setPackage("com.uto.servicelink");
                 bindService(bindIntent, connection, BIND_AUTO_CREATE);
                 break;
             case R.id.btn_unbind:

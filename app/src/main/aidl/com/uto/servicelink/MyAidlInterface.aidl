@@ -10,6 +10,8 @@ interface MyAidlInterface {
      */
     void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat,
             double aDouble, String aString);
-
-            void startDownload();
+    /**
+    * used for something downloaded in background
+      */
+    void startDownload();
 }
